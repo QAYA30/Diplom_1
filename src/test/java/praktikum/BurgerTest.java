@@ -11,23 +11,24 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BurgerTest {
-    Burger burger = new Burger();
+    private Burger burger = new Burger();
     @Mock
     Bun bun;
     @Mock
-    Ingredient ingredient1;
+    Ingredient ingredientFilling;
     @Mock
-    Ingredient ingredient2;
+    Ingredient ingredientSauce;
     @Before
+
     public void set() {
         when(bun.getPrice()).thenReturn(1000F);
         when(bun.getName()).thenReturn("Краторная булка");
-        when(ingredient1.getPrice()).thenReturn(100F);
-        when(ingredient1.getType()).thenReturn(IngredientType.SAUCE);
-        when(ingredient1.getName()).thenReturn("Соус традиционный галактический");
-        when(ingredient2.getPrice()).thenReturn(3000F);
-        when(ingredient2.getType()).thenReturn(IngredientType.FILLING);
-        when(ingredient2.getName()).thenReturn("Говяжий метеорит (отбивная)");
+        when(ingredientFilling.getPrice()).thenReturn(100F);
+        when(ingredientFilling.getType()).thenReturn(IngredientType.SAUCE);
+        when(ingredientFilling.getName()).thenReturn("Соус традиционный галактический");
+        when(ingredientSauce.getPrice()).thenReturn(3000F);
+        when(ingredientSauce.getType()).thenReturn(IngredientType.FILLING);
+        when(ingredientSauce.getName()).thenReturn("Говяжий метеорит (отбивная)");
     }
     @Test
     public void setBuns() {
@@ -36,22 +37,22 @@ public class BurgerTest {
     }
     @Test
     public void addIngredient() {
-        burger.addIngredient(ingredient1);
+        burger.addIngredient(ingredientFilling);
         assertEquals("Результат не соответствует ожидаемому", 1, burger.ingredients.size());
     }
     @Test
     public void removeIngredient() {
-        burger.addIngredient(ingredient1);
+        burger.addIngredient(ingredientFilling);
         burger.removeIngredient(0);
         assertEquals("Результат не соответствует ожидаемому", 0, burger.ingredients.size());
     }
     @Test
     public void moveIngredient() {
-        ingredient1 = new Ingredient(IngredientType.FILLING, ingredient1.getName(), ingredient1.getPrice());
-        ingredient2 = new Ingredient(IngredientType.SAUCE, ingredient2.getName(), ingredient2.getPrice());
-        List<Ingredient> expectedResult = List.of(ingredient2, ingredient1);
-        burger.addIngredient(ingredient1);
-        burger.addIngredient(ingredient2);
+        ingredientFilling = new Ingredient(IngredientType.FILLING, ingredientFilling.getName(), ingredientFilling.getPrice());
+        ingredientSauce = new Ingredient(IngredientType.SAUCE, ingredientSauce.getName(), ingredientSauce.getPrice());
+        List<Ingredient> expectedResult = List.of(ingredientSauce, ingredientFilling);
+        burger.addIngredient(ingredientFilling);
+        burger.addIngredient(ingredientSauce);
         burger.moveIngredient(0, 1);
         List<Ingredient> actualResult = burger.ingredients;
         assertEquals("Результат не соответствует ожидаемому", expectedResult, actualResult);
@@ -59,15 +60,15 @@ public class BurgerTest {
     @Test
     public void getPrice() {
         burger.setBuns(bun);
-        burger.addIngredient(ingredient1);
+        burger.addIngredient(ingredientFilling);
         float actualResult = burger.getPrice();
         assertEquals("Результат не соответствует ожидаемому", 2100F, actualResult, 0);
     }
     @Test
     public void getReceipt() {
         burger.setBuns(bun);
-        burger.addIngredient(ingredient1);
-        burger.addIngredient(ingredient2);
+        burger.addIngredient(ingredientFilling);
+        burger.addIngredient(ingredientSauce);
         String actualResult = burger.getReceipt();
         String expectedResult = String.format("(==== Краторная булка ====)%n" +
                 "= sauce Соус традиционный галактический =%n" +
